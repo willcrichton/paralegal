@@ -919,7 +919,7 @@ impl NodeExt for GlobalNode {
         )
     }
     fn get_location(self, ctx: &RootContext) -> &Span {
-        &self.info(ctx).span
+        &self.info(ctx).span.0.as_ref().unwrap()
     }
 
     /// Returns whether this Node has the marker applied to it directly or via its type.

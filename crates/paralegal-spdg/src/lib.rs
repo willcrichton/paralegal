@@ -796,15 +796,42 @@ impl GlobalEdge {
     }
 }
 
+#[derive(Clone, Serialize, Deserialize)]
+pub struct DebugData<T>(pub Option<T>);
+
+impl<T> DebugData<T> {
+    pub fn new(t: T) -> Self {
+        DebugData(std::env::var("DEBUG").is_ok().then_some(t))
+    }
+}
+
+impl<T: Display> Display for DebugData<T> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        match &self.0 {
+            Some(t) => t.fmt(f),
+            None => write!(f, "<?>"),
+        }
+    }
+}
+
+impl<T: fmt::Debug> fmt::Debug for DebugData<T> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        match &self.0 {
+            Some(t) => t.fmt(f),
+            None => write!(f, "<?>"),
+        }
+    }
+}
+
 /// Node metadata in the [`SPDGImpl`]
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct NodeInfo {
     /// Location of the node in the call stack
     pub at: CallString,
     /// The debug print of the `mir::Place` that this node represents
-    pub description: String,
+    pub description: DebugData<String>,
     /// Span information for this node
-    pub span: Span,
+    pub span: DebugData<Span>,
 }
 
 impl Display for NodeInfo {

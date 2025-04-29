@@ -140,7 +140,10 @@ impl<'a> dot::Labeller<'a, CallString, GlobalEdge> for DotPrintableProgramDescri
                 let mut all_markers = markers.chain(type_markers).copied().peekable();
                 let write_id_and_desc = |s: &mut String| {
                     let idx = n.index();
-                    let desc = weight.description.replace('<', "&lt;").replace('>', "&gt;");
+                    let desc = match &weight.description.0 {
+                        Some(desc) => desc.replace('<', "&lt;").replace('>', "&gt;"),
+                        None => "".to_string()
+                    };
                     write!(s, "<p{idx}> ({idx}) {desc}")
                 };
                 s.push('|');

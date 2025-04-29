@@ -429,8 +429,8 @@ impl<'a, 'tcx, C: Extend<DefId>> GraphConverter<'tcx, 'a, C> {
                 i,
                 NodeInfo {
                     at: weight.at,
-                    description: format!("{:?}", weight.place),
-                    span: src_loc_for_span(node_span, tcx),
+                    description: DebugData::new(format!("{:?}", weight.place)),
+                    span: DebugData::new(src_loc_for_span(node_span, tcx)),
                 },
             );
             self.node_annotations(i, weight);
